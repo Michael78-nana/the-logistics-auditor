@@ -12,6 +12,7 @@ An audit of Veridi Logistics' delivery data reveals that approximately 8.8% of a
 - **Link to Notebook:** *(logistics_auditor.ipynb)*
 - **Link to HTML Export:** *(logistics_auditor.html)*
 - **Link to Presentation:** *(https://docs.google.com/presentation/d/1Vdb9yv-kIyPHiRxsOxP6NDQZaIRJTKNh/edit?usp=sharing&ouid=105077676706585141384&rtpof=true&sd=true)*
+- **Link to Dashboard:** (https://the-logistics-auditor-jnrkf8yde6ayvzcrq6jtfd.streamlit.app/)
 
 ## C. Technical Explanation
 
