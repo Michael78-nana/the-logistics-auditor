@@ -6,7 +6,7 @@
 ---
 
 ## A. Executive Summary
-An audit of Veridi Logistics' delivery data reveals that approximately 8.8% of all delivered orders across Brazil arrived late. The impact on customer satisfaction is severe — Super Late deliveries (more than 5 days past the estimated date) averaged a review score of just 1.79 out of 5, compared to 4.29 for on-time orders. The problem is not nationwide: northeastern states, particularly Alagoas (AL) and Maranhão (MA), show disproportionately high late delivery rates of 24% and 20% respectively. Product categories such as audio equipment and seasonal supplies also emerge as consistently hard to ship on time, pointing to specific seller relationships that need urgent attention.
+An audit of Veridi Logistics' delivery data reveals that approximately 8.8% of all delivered orders across Brazil arrived late. The impact on customer satisfaction is severe, Super Late deliveries (more than 5 days past the estimated date) averaged a review score of just 1.79 out of 5, compared to 4.29 for on-time orders. The problem is not nationwide: northeastern states, particularly Alagoas (AL) and Maranhão (MA), show disproportionately high late delivery rates of 24% and 20% respectively. Product categories such as audio equipment and seasonal supplies also emerge as consistently hard to ship on time, pointing to specific seller relationships that need urgent attention.
 
 ## B. Project Links
 - **Link to Notebook:** *(logistics_auditor.ipynb)*
@@ -20,7 +20,7 @@ An audit of Veridi Logistics' delivery data reveals that approximately 8.8% of a
 Date columns (`order_estimated_delivery_date` and `order_delivered_customer_date`) were converted to datetime format before any calculations. Orders with a status of `cancelled` or `unavailable` were excluded from the delay analysis since they were never delivered. For the category-level analysis, categories with fewer than 100 orders were filtered out to ensure statistical reliability.
 
 **Candidate's Choice — Late Delivery Rate by Product Category:**  
-Beyond geography, we investigated whether certain product categories are harder to ship on time than others. Audio equipment, fashion/underwear/beach items, and christmas supplies topped the list at around 13% late delivery rate. This adds direct business value — if specific categories consistently underperform, Veridi can work with sellers in those categories to improve lead times, packaging, or fulfilment processes, rather than treating the problem as purely a regional logistics issue.
+Beyond geography, we investigated whether certain product categories are harder to ship on time than others. Audio equipment, fashion/underwear/beach items, and christmas supplies topped the list at around 13% late delivery rate. This adds direct business value if specific categories consistently underperform, Veridi can work with sellers in those categories to improve lead times, packaging, or fulfilment processes, rather than treating the problem as purely a regional logistics issue.
 
 ---
 
@@ -59,10 +59,10 @@ Loaded the Orders, Reviews, and Customers CSVs and joined them into a single mas
 Calculated `days_difference` between estimated and actual delivery dates. Classified orders as On Time (89,134), Late (3,631), and Super Late (4,242). Cancelled and unavailable orders were excluded.
 
 ### Story 3: The Geographic Heatmap
-Calculated late delivery percentage per Brazilian state. Alagoas (AL) topped the list at 23.94%, followed by Maranhão (MA) at 19.56% — both northeastern states far from the main distribution centres.
+Calculated late delivery percentage per Brazilian state. Alagoas (AL) topped the list at 23.94%, followed by Maranhão (MA) at 19.56% both northeastern states far from the main distribution centres.
 
 ### Story 4: The Sentiment Correlation
-On Time orders averaged a review score of 4.29, Late orders 3.46, and Super Late orders just 1.79 — confirming that late deliveries are directly driving negative customer reviews.
+On Time orders averaged a review score of 4.29, Late orders 3.46, and Super Late orders just 1.79 confirming that late deliveries are directly driving negative customer reviews.
 
 ### Bonus: The Translation Challenge
 Mapped Portuguese product category names to English using `product_category_name_translation.csv`, enabling category-level analysis accessible to a global audience.
