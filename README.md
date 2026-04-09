@@ -1,7 +1,25 @@
-# Project Brief: The "Last Mile" Logistics Auditor
+# The "Last Mile" Logistics Auditor
 
 **Client:** Veridi Logistics (Global E-Commerce Aggregator)  
-**Deliverable:** Public Dashboard, Code Notebook & Insight Presentation
+**Deliverable:** Code Notebook & Insight Presentation
+
+---
+
+## A. Executive Summary
+An audit of Veridi Logistics' delivery data reveals that approximately 8.8% of all delivered orders across Brazil arrived late. The impact on customer satisfaction is severe — Super Late deliveries (more than 5 days past the estimated date) averaged a review score of just 1.79 out of 5, compared to 4.29 for on-time orders. The problem is not nationwide: northeastern states, particularly Alagoas (AL) and Maranhão (MA), show disproportionately high late delivery rates of 24% and 20% respectively. Product categories such as audio equipment and seasonal supplies also emerge as consistently hard to ship on time, pointing to specific seller relationships that need urgent attention.
+
+## B. Project Links
+- **Link to Notebook:** *(logistics_auditor.ipynb)*
+- **Link to HTML Export:** *(logistics_auditor.html)*
+- **Link to Presentation:** *(https://docs.google.com/presentation/d/1Vdb9yv-kIyPHiRxsOxP6NDQZaIRJTKNh/edit?usp=sharing&ouid=105077676706585141384&rtpof=true&sd=true)*
+
+## C. Technical Explanation
+
+**Data Cleaning:**  
+Date columns (`order_estimated_delivery_date` and `order_delivered_customer_date`) were converted to datetime format before any calculations. Orders with a status of `cancelled` or `unavailable` were excluded from the delay analysis since they were never delivered. For the category-level analysis, categories with fewer than 100 orders were filtered out to ensure statistical reliability.
+
+**Candidate's Choice — Late Delivery Rate by Product Category:**  
+Beyond geography, we investigated whether certain product categories are harder to ship on time than others. Audio equipment, fashion/underwear/beach items, and christmas supplies topped the list at around 13% late delivery rate. This adds direct business value — if specific categories consistently underperform, Veridi can work with sellers in those categories to improve lead times, packaging, or fulfilment processes, rather than treating the problem as purely a regional logistics issue.
 
 ---
 
@@ -16,133 +34,56 @@ Your job is to build a "Delivery Performance" audit tool that connects the dots 
 You will use the **Olist E-Commerce Dataset**, a real commercial dataset from a Brazilian marketplace. This is a relational database dump, meaning the data is split across multiple CSV files.
 
 * **Source:** [Kaggle - Olist Brazilian E-Commerce Dataset](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)
-* **Key Files to Use:**
-    * `olist_orders_dataset.csv` (The central table)
-    * `olist_order_reviews_dataset.csv` (Sentiment)
-    * `olist_customers_dataset.csv` (Location)
-    * `olist_products_dataset.csv` (Categories)
+* **Key Files Used:**
+    * `olist_orders_dataset.csv`
+    * `olist_order_reviews_dataset.csv`
+    * `olist_customers_dataset.csv`
+    * `olist_products_dataset.csv`
+    * `olist_order_items_dataset.csv`
+    * `product_category_name_translation.csv`
 
-## 3. Tooling Requirements
-You have the flexibility to choose your development environment:
-
-* **Option A (Recommended):** Use a cloud-hosted notebook like **Google Colab**, or **Deepnote**, etc.
-* **Option B:** Use a local **Jupyter Notebook** or **VS Code**.
-    * *Condition:* If you choose this, you must ensure your code is reproducible. Do not reference local file paths (e.g., `C:/Downloads/...`). Assume the dataset is in the same folder as your notebook.
-* **Dashboarding:** The final output must be a **publicly accessible link** (e.g., Tableau Public, Google Looker Studio, Streamlit Cloud, or PowerBI Web, etc.).
+## 3. Tooling
+- **Environment:** Jupyter Notebook (Anaconda)
+- **Language:** Python 3
+- **Libraries:** pandas, matplotlib
 
 ---
 
-## 4. User Stories & Acceptance Criteria
+## 4. User Stories Completed
 
 ### Story 1: The Schema Builder
-**As a** Data Engineer,  
-**I want** to join the Orders, Reviews, and Customers tables into a single master dataset,  
-**So that** I can analyze a customer's location and their review score in the same row.
-
-* **Acceptance Criteria:**
-    * Load the raw CSVs into your notebook.
-    * Perform the correct joins (e.g., join Reviews to Orders on `order_id`, join Customers to Orders on `customer_id`).
-    * **Check:** Ensure you don't accidentally duplicate rows (a common error with 1-to-many joins).
+Loaded the Orders, Reviews, and Customers CSVs and joined them into a single master dataset of 99,992 rows. Verified that duplicate `order_id` values (551 found) were expected due to the one-to-many relationship between orders and reviews.
 
 ### Story 2: The "Real" Delay Calculator
-**As a** Logistics Manager,  
-**I want** to know the difference between the "Estimated Delivery Date" and the "Actual Delivery Date,"  
-**So that** I can see how often we are lying to customers.
-
-* **Acceptance Criteria:**
-    * Create a new calculated column: `Days_Difference` = `order_estimated_delivery_date` - `order_delivered_customer_date`.
-    * Classify orders into statuses: "On Time", "Late", and "Super Late" (> 5 days late).
-    * Handle missing values: Some orders were never delivered (`order_status` = 'canceled' or 'unavailable'). These should be excluded or flagged separately.
+Calculated `days_difference` between estimated and actual delivery dates. Classified orders as On Time (89,134), Late (3,631), and Super Late (4,242). Cancelled and unavailable orders were excluded.
 
 ### Story 3: The Geographic Heatmap
-**As a** Regional Director,  
-**I want** to see which specific States (`customer_state`) have the highest percentage of late deliveries,  
-**So that** I can focus my repair efforts on the worst regions.
-
-* **Acceptance Criteria:**
-    * Calculate the % of late orders per State.
-    * Visualize this on a map or a bar chart.
-    * **Insight:** Identify if "Remote" states (far from the distribution center) are disproportionately affected.
+Calculated late delivery percentage per Brazilian state. Alagoas (AL) topped the list at 23.94%, followed by Maranhão (MA) at 19.56% — both northeastern states far from the main distribution centres.
 
 ### Story 4: The Sentiment Correlation
-**As a** Customer Success Lead,  
-**I want** to see if late deliveries actually cause bad reviews,  
-**So that** I can prove to the CEO that logistics is the problem.
+On Time orders averaged a review score of 4.29, Late orders 3.46, and Super Late orders just 1.79 — confirming that late deliveries are directly driving negative customer reviews.
 
-* **Acceptance Criteria:**
-    * Create a visualization comparing "Delivery Delay (Days)" vs "Average Review Score (1-5)".
-    * Show the average review score for "On Time" orders vs. "Late" orders.
+### Bonus: The Translation Challenge
+Mapped Portuguese product category names to English using `product_category_name_translation.csv`, enabling category-level analysis accessible to a global audience.
 
----
-
-## 5. Bonus User Story: The "Translation" Challenge
-**As a** Global Analyst,  
-**I want** to see product categories in **English**, not Portuguese,  
-**So that** I can understand if "Furniture" is harder to ship than "Electronics".
-
-* **Acceptance Criteria:**
-    * The `product_category_name` is in Portuguese (e.g., `cama_mesa_banho`).
-    * Use the `product_category_name_translation.csv` file included in the dataset (or create your own mapping) to translate these into English for your final dashboard.
+### Candidate's Choice: Late Delivery Rate by Product Category
+Identified the top 15 product categories with the highest late delivery rates. Audio, fashion_underwear_beach, and christmas_supplies led at ~13%, giving Veridi actionable insight beyond regional patterns.
 
 ---
 
-## 6. The "Candidate's Choice" Challenge
-**As a** Creative Problem Solver,  
-**I want** to include one extra feature or analysis that adds specific business value,  
-**So that** I can demonstrate my ability to think beyond the basic requirements.
-
-* **Instructions:**
-    * Add one more metric, chart, or drill-down.
-    * **Requirement:** You must justify *why* this feature matters to the business in your README.
-
----
-
-## 7. Submission Guidelines
-Please edit this `README.md` file in your forked repository to include the following three sections at the top:
-
-### A. The Executive Summary
-* A 3-5 sentence summary of your findings.
-
-### B. Project Links
-* **Link to Notebook:** (e.g., Google Colab, etc.). *Ensure sharing permissions are set to "Anyone with the link can view".*
-* **Link to Dashboard:** (e.g., Tableau Public, etc.).
-* **Link to Presentation:** A link to a short slide deck (PDF/PPT) AND (Optional) a 2-minute video walkthrough (YouTube) explaining your results.
-
-### C. Technical Explanation
-* Briefly explain how you handled the "Data Cleaning".
-* Explain your "Candidate's Choice" addition.
-
-**Important Note on Code Submission:**
-* Upload your `.ipynb` notebook file to the repo.
-* **Crucial:** Also upload an **HTML or PDF export** of your notebook so we can see your charts even if GitHub fails to render the notebook code.
-* Once you are ready, please fill out the [Official Submission Form Here](https://forms.office.com/e/heitZ9PP7y) with your links
-
----
-
-## 🛑 CRITICAL: Pre-Submission Checklist
-
-**Before you submit your form, you MUST complete this checklist.**
-
-> ⚠️ **WARNING:** If you miss any of these items, your submission will be flagged as "Incomplete" and you will **NOT** be invited to an interview. 
->
-> **We do not accept "permission error" excuses. Test your links in Incognito Mode.**
+## 🛑 Pre-Submission Checklist
 
 ### 1. Repository & Code Checks
-- [ ] **My GitHub Repo is Public.** (Open the link in a Private/Incognito window to verify).
-- [ ] **I have uploaded the `.ipynb` notebook file.**
-- [ ] **I have ALSO uploaded an HTML or PDF export** of the notebook.
-- [ ] **I have NOT uploaded the massive raw dataset.** (Use `.gitignore` or just don't commit the CSV).
-- [ ] **My code uses Relative Paths.** 
+- [ ] My GitHub Repo is Public.
+- [ ] I have uploaded the `.ipynb` notebook file.
+- [ ] I have ALSO uploaded an HTML export of the notebook.
+- [ ] I have NOT uploaded the raw dataset CSVs.
+- [ ] My code uses Relative Paths.
 
 ### 2. Deliverable Checks
-- [ ] **My Dashboard link is publicly accessible.** (No login required).
-- [ ] **My Presentation link is publicly accessible.** (Permissions set to "Anyone with the link can view").
-- [ ] **I have updated this `README.md` file** with my Executive Summary and technical notes.
+- [ ] My Presentation link is publicly accessible.
+- [ ] I have updated this `README.md` file with my Executive Summary and technical notes.
 
 ### 3. Completeness
-- [ ] I have completed **User Stories 1-4**.
-- [ ] I have completed the **"Candidate's Choice"** challenge and explained it in the README.
-
-**✅ Only when you have checked every box above, proceed to the submission form.**
-
----
+- [ ] I have completed User Stories 1–4.
+- [ ] I have completed the Candidate's Choice challenge and explained it above.
